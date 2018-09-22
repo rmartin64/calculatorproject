@@ -1,0 +1,33 @@
+.btn {
+  border-radius: 0;
+  border: solid black 0.01rem;
+    padding: 1.3rem 0 1.3rem 0;
+
+}
+.btn:focus {
+  box-shadow: none;
+}
+#top {
+border-top: solid black 0.02rem;
+border-right: solid black 0.02rem;
+border-left: solid black 0.02rem;
+min-height: 2rem;
+overflow-wrap:break-word;
+  text-align: right;
+  word-wrap: break-word;
+
+}
+#outputter {
+
+}
+#wrapper {
+  width: 22rem;
+  border: solid black 0.1rem;
+}
+#inputter{
+word-wrap: break-word;
+text-align: right;
+border-left: solid black 0.02rem;
+border-right: solid black 0.02rem;
+border-bottom: solid black 0.01rem
+}
