@@ -34,7 +34,7 @@ class App extends Component {
       )
 }
 sendOperatorToArray(operator) {
-  /\+|-|\/|\*/.test(this.state.numberForInput) ?
+  /\+|-[^0-9]|\/|\*/.test(this.state.numberForInput) ?
   this.setState(
     {
       inputArray: this.state.inputArray.slice(0, this.state.inputArray.length - 1).concat(operator),
@@ -70,40 +70,30 @@ sendDotToArray(dot) {
   parseArray() {
     const RESULT = (array) => {
       let copyArray = array.slice();
+      let num = 0;
+      let stack = [];
+      let sign = '+';
       for (let i = 0; i < copyArray.length; i++) {
-       if (copyArray[i] == '/' && i !== copyArray.length - 1) {
-         let temp = parseFloat(copyArray[i - 1]) / parseFloat(copyArray[i + 1]);
-      copyArray.splice(i - 1, 3, temp);
-          i--;
-          i--;
-        } else if (copyArray[i] == '*' && i !== copyArray.length - 1) {
-          let temp = parseFloat(copyArray[i - 1]) * parseFloat(copyArray[i + 1]);
-       copyArray.splice(i - 1, 3, temp);
-           i--;
-           i--;
-        } else if (i == copyArray.length - 1 && (copyArray[i] == '*' || copyArray[i] == '/') ){
-          i++;
-        } else {
-          true;
+        if (!isNaN(copyArray[i])) {
+          num = parseFloat(copyArray[i]);
+        }
+        if (isNaN(copyArray[i]) || i == copyArray.length - 1) {
+          if (sign == "+") {
+            stack.push(num);
+          } else if (sign == "-") {
+            stack.push(-num);
+          } else if (sign == "*") {
+            stack.push(stack.pop() * num);
+          } else {
+            stack.push(stack.pop() / num);
+          }
+          num = 0;
+          sign = copyArray[i];
         }
       }
-      let resultNumber = 0;
-      for (let i = 0; i < copyArray.length; i++) {
-        if (copyArray[i] == '+' && i !== copyArray.length - 1) {
-          resultNumber += parseFloat(copyArray[i + 1]);
-          i++;
-        } else if (copyArray[i] == '-' && i !== copyArray.length - 1) {
-          resultNumber -= parseFloat(copyArray[i + 1]);
-          i++;
-        } else if (i == copyArray.length - 1 && (copyArray[i] == '+' || copyArray[i] == '-') ){
-          i++;
-        } else {
-          resultNumber += parseFloat(copyArray[i]);
-        }
-      }
-      return resultNumber;
+      return stack.reduce((a, b) => a + b, 0);
     }
-    if (/\+|-|\/|\*/.test(this.state.numberForInput)) {
+    if (/\+|-[^0-9]|\/|\*/.test(this.state.numberForInput)) {
       this.setState(
         {
           displayResult: this.state.inputArray.concat('=').concat(RESULT(this.state.inputArray)),
